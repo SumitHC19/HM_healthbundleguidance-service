@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: packageguidance-test
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@local-mongodb:27017/personHealthDataDV?authSource=admin  # pragma: allowlist secret
+      database: personHealthDataDV
+
+packageguidance:
+  mongo:
+    uri: mongodb://local-mongodb:27017
+    username: admin
+    password: admin123  # pragma: allowlist secret
+    database: personHealthDataDV
+    collection: packageGuidance
+    collectionname: packageGuidance

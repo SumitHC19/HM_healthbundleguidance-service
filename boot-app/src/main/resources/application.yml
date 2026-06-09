@@ -1,0 +1,142 @@
+---
+# Base configuration
+spring:
+  application:
+    name: bundleguidance
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+# MongoDB TLS CA certificate location (for AWS DocumentDB)
+# NOTE: This is used by programmatic SSL configuration as a fallback
+# The primary SSL configuration is via JVM truststore (entrypoint.sh)
+# Set to empty in production to use JVM truststore exclusively
+mongodb:
+  tls:
+    ca-file: ${MONGODB_TLS_CA_FILE:}
+
+---
+# Local Development Profile
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: bundleguidance-local
+
+# Local MongoDB configuration for development
+# MongoDB is enabled by default to connect to local-mongodb container
+# These values can be overridden by environment variables
+bundleguidance:
+  mongo:
+    enabled: ${MONGO_ENABLED:true}
+    host: ${MONGO_HOST:local-mongodb}
+    port: ${MONGO_PORT:27017}
+    username: ${MONGO_USERNAME:}
+    password: ${MONGO_PASSWORD:}  # pragma: allowlist secret
+    database: ${MONGO_DATABASE:personHealthDataDV}
+    params: ${MONGO_PARAMS:}
+
+---
+# DEV Environment Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: bundleguidance-dev
+
+# AWS DocumentDB configuration for DEV environment
+# Default configuration for AWS ECS deployment
+# Environment variables: MONGO_HOST, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, MONGO_PARAMS
+bundleguidance:
+  mongo:
+    host: ${MONGO_HOST:dp-health-docdb-health-dv-clu.cluster-c69siyuiw4m7.us-east-1.docdb.amazonaws.com}
+    port: ${MONGO_PORT:27017}
+    username: ${MONGO_USERNAME:healthdocdbdv}
+    password: ${MONGO_PASSWORD}  # Required: Set via ECS Task Definition or Secrets Manager
+    database: ${MONGO_DATABASE:personHealthDataDV}
+    params: ${MONGO_PARAMS:tls=true&tlsAllowInvalidHostnames=true&retryWrites=false&authSource=admin}
+
+# Enable MongoDB query logging for DEV
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    com.alight.bundleguidance: DEBUG
+
+---
+# QA Environment Profile
+spring:
+  config:
+    activate:
+      on-profile: qa
+  application:
+    name: bundleguidance-qa
+
+# AWS DocumentDB configuration for QA environment
+# Default configuration for AWS ECS deployment
+# Environment variables: MONGO_HOST, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, MONGO_PARAMS
+bundleguidance:
+  mongo:
+    host: ${MONGO_HOST}
+    port: ${MONGO_PORT}
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}  # Required: Set via ECS Task Definition or Secrets Manager
+    database: ${MONGO_DATABASE}
+    params: ${MONGO_PARAMS}
+
+---
+# QC Environment Profile
+spring:
+  config:
+    activate:
+      on-profile: qc
+  application:
+    name: bundleguidance-qc
+
+# AWS DocumentDB configuration for QC environment
+# Default configuration for AWS ECS deployment
+# Environment variables: MONGO_HOST, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, MONGO_PARAMS
+bundleguidance:
+  mongo:
+    host: ${MONGO_HOST}
+    port: ${MONGO_PORT:27017}
+    username: ${MONGO_USERNAME}
+    password: ${MONGO_PASSWORD}  # Required: Set via ECS Task Definition or Secrets Manager
+    database: ${MONGO_DATABASE}
+    params: ${MONGO_PARAMS:tls=true&tlsAllowInvalidHostnames=true&retryWrites=false&authSource=admin}
+
+---
+# PROD Environment Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: bundleguidance-prod
+
+# AWS DocumentDB configuration for PROD environment
+# All values must be provided via environment variables for production
+# Default configuration for AWS ECS deployment
+# Environment variables: MONGO_HOST, MONGO_PORT, MONGO_USERNAME, MONGO_PASSWORD, MONGO_DATABASE, MONGO_PARAMS
+bundleguidance:
+  mongo:
+    host: ${MONGO_HOST}  # Required: Set via ECS Task Definition
+    port: ${MONGO_PORT:27017}
+    username: ${MONGO_USERNAME}  # Required: Set via ECS Task Definition or Secrets Manager
+    password: ${MONGO_PASSWORD}  # Required: Set via ECS Task Definition or Secrets Manager
+    database: ${MONGO_DATABASE}  # Required: Set via ECS Task Definition
+    params: ${MONGO_PARAMS:tls=true&tlsAllowInvalidHostnames=true&retryWrites=false&authSource=admin}
+
+---
+# Test Profile
+spring:
+  config:
+    activate:
+      on-profile: test
+  application:
+    name: bundleguidance-test
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@local-mongodb:27017/personHealthDataDV?authSource=admin  # pragma: allowlist secret
+      database: personHealthDataDV
+...
