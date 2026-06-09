@@ -1,0 +1,26 @@
+subprojects {
+    apply plugin: com.alight.gradle.plugins.JavaLibPlugin
+dependencyManagement {
+	resolutionStrategy {
+		cacheDynamicVersionsFor 0, 'seconds'
+	}
+	imports {
+mavenBom ('com.alight.upoint:cloudcommons-shared-v8-util:8.+')
+mavenBom ('com.alight.upoint:hasbro-shared-v9-util:9.+')
+mavenBom ('com.alight.upoint:foundation-shared-v10-util:10.+')
+mavenBom ('com.alight.upoint:springboot-integration-shared-v8-util:8.+')
+mavenBom ('com.alight.upoint:upn-spring-starter-v4-util:4.+')
+	}
+}
+    dependencies {
+        // Testing dependencies
+        testImplementation 'org.mockito:mockito-core:4.0.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+    }
+
+    test {
+        // For JUnit 5
+        useJUnitPlatform()
+    }
+}

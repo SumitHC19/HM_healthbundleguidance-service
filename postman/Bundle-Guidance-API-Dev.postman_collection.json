@@ -1,0 +1,670 @@
+{
+  "info": {
+    "_postman_id": "95d1fa17-8b39-4354-a82a-f55a1d37f3e0",
+    "name": "Bundle Guidance API - Dev",
+    "description": "API collection for Bundle Guidance Service - Development Environment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52124180"
+  },
+  "item": [
+    {
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "Get Recommendations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.response.to.be.json;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19968\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19968\",\"platformInternalId\":\"12853765\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/recommendations/EV-SEED-1",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "recommendations",
+                "EV-SEED-1"
+              ]
+            },
+            "description": "Retrieves bundle recommendations for a specific evaluation ID from MongoDB"
+          },
+          "response": []
+        },
+        {
+          "name": "Save Recommendations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200: \"+ pm.response.code === 200);",
+                  "",
+                  "const responseJson = pm.response.json();",
+                  "pm.test(\"Response json not null: \"+responseJson !== null);",
+                  "",
+                  "pm.test(\"Response contains minimum fields \", () => {",
+                  "     pm.expect(responseJson.evaluationType).not.empty;",
+                  "     pm.expect(responseJson.evaluationId).not.empty;",
+                  "     pm.expect(responseJson.evaluationStatus).not.empty;",
+                  "     pm.expect(responseJson.evaluationOutput).not.empty;",
+                  "}); "
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19968\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19968\",\"platformInternalId\":\"12853765\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventType\": \"evaluation_result\",\n  \"evaluationId\": \"EV-SEED-1\",\n  \"evaluationType\": \"bundle\",\n  \"evaluationStatus\": \"success\",\n  \"evaluationOutput\": {\n    \"bundles\": [\n      {\n        \"bundleRank\": 2,\n        \"featuredAs\": \"balanced\",\n        \"featuredAsVariants\": [\"balanced\", \"lower_adverse\", \"lower_deductible\", \"balanced_non_hdhp\"],\n        \"isCustomizable\": true,\n        \"estimatedCosts\": {\n          \"adverse\": {\n            \"totalCost\": 4682.4000000000015,\n            \"totalPremiums\": 7919.400000000001,\n            \"totalOutOfPocket\": 2225,\n            \"totalTaxSavings\": 1869,\n            \"totalEmployerContributionsExSihra\": 1150,\n            \"totalPremiumCredit\": 0,\n            \"totalOutOfPocketCredit\": 0,\n            \"totalIndemnityPremiums\": 337.92,\n            \"totalIndemnityPayouts\": 2444,\n            \"totalIndemnityWellnessBenefits\": 1000,\n            \"accounts\": {\n              \"employeeContributions\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"employerContributions\": {\n                \"fsaTotal\": 150,\n                \"fsaSubscriber\": 150,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 999,\n                \"hraSubscriber\": 999,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"employerMatching\": null,\n              \"rollovers\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"balanceUsage\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              }\n            },\n            \"outOfPocketBreakdown\": {\n              \"byCategory\": {\n                \"doctor_visits\": 109,\n                \"emergency_room_visits\": 125,\n                \"hospital_visits\": 549,\n                \"labs_or_tests\": 74,\n                \"other\": 692,\n                \"prescription_drugs\": 138,\n                \"specialist_visits\": 538\n              },\n              \"byPerson\": {\n                \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\": 601,\n                \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\": 604,\n                \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\": 324,\n                \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\": 696\n              },\n              \"byProduct\": {\n                \"DENQNAABUGYEBD8DCIZ1WOOEYZ1FGH0R\": 2225,\n                \"ZHHPKP0QGDX2A11FEXHX8FT5LT6DQA3M\": 0\n              }\n            }\n          },\n          \"expected\": {\n            \"totalCost\": 5051.4000000000015,\n            \"totalPremiums\": 7919.400000000001,\n            \"totalOutOfPocket\": 1150,\n            \"totalTaxSavings\": 1869,\n            \"totalEmployerContributionsExSihra\": 1150,\n            \"totalPremiumCredit\": 0,\n            \"totalOutOfPocketCredit\": 0,\n            \"totalIndemnityPremiums\": 337.92,\n            \"totalIndemnityPayouts\": 1000,\n            \"totalIndemnityWellnessBenefits\": 1000,\n            \"accounts\": {\n              \"employeeContributions\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"employerContributions\": {\n                \"fsaTotal\": 150,\n                \"fsaSubscriber\": 150,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 999,\n                \"hraSubscriber\": 999,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"employerMatching\": null,\n              \"rollovers\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              },\n              \"balanceUsage\": {\n                \"fsaTotal\": 0,\n                \"fsaSubscriber\": 0,\n                \"fsaSpouse\": null,\n                \"hraTotal\": 0,\n                \"hraSubscriber\": 0,\n                \"hraSpouse\": null,\n                \"hsaTotal\": null,\n                \"hsaSubscriber\": null,\n                \"hsaSpouse\": null,\n                \"lpfsaTotal\": null,\n                \"lpfsaSubscriber\": null,\n                \"lpfsaSpouse\": null\n              }\n            },\n            \"outOfPocketBreakdown\": {\n              \"byCategory\": {\n                \"doctor_visits\": 90,\n                \"emergency_room_visits\": 0,\n                \"hospital_visits\": 0,\n                \"labs_or_tests\": 0,\n                \"other\": 620,\n                \"prescription_drugs\": 110,\n                \"specialist_visits\": 330\n              },\n              \"byPerson\": {\n                \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\": 325,\n                \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\": 325,\n                \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\": 110,\n                \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\": 390\n              },\n              \"byProduct\": {\n                \"DENQNAABUGYEBD8DCIZ1WOOEYZ1FGH0R\": 1150,\n                \"ZHHPKP0QGDX2A11FEXHX8FT5LT6DQA3M\": 0\n              }\n            }\n          }\n        },\n        \"planUses\": [\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coverageId\": \"VVJ9QLXLJBS1KHPTHXASD4AKR3F3TRFZ\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": 30000\n              }\n            ],\n            \"employeeContribution\": null,\n            \"offerId\": null,\n            \"planId\": \"PbtDkFVv1NLFjnur\",\n            \"productId\": \"5SJHB4ZW753QHIYDOSDMLEDRCNR2NLME\",\n            \"type\": \"illness_indemnity\"\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coverageId\": \"HLASUV3JPNTWZYEFVQSDXP3TTQPAUNZ3\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": null,\n            \"offerId\": \"MXGHPWZQEHED87CVMVLH27UL4XTDPJ77\",\n            \"planId\": \"PsslP47T4MvLvphd\",\n            \"productId\": \"DENQNAABUGYEBD8DCIZ1WOOEYZ1FGH0R\",\n            \"type\": \"medical_plan\"\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coverageId\": \"HLASUV3JPNTWZYEFVQSDXP3TTQPAUNZ3\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": 0,\n            \"offerId\": \"NODPVVPYD9XOIIENYZY0HTOVTA6G0XDF\",\n            \"planId\": \"PCTAqwSaWbd4swwt\",\n            \"productId\": \"PP4VVN3DQMUWDJE2SINDZOHX73AUHDH7\",\n            \"type\": \"hra\"\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coverageId\": \"HLASUV3JPNTWZYEFVQSDXP3TTQPAUNZ3\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": 0,\n            \"offerId\": \"KGH00ZKJMBRSRQEQBXBKHXHDM57FEDQC\",\n            \"planId\": \"Ph3NiAThTNQaXTK1\",\n            \"productId\": \"NUWCFEW8QSKPZJVEW3BPIYAPVPLZZHKZ\",\n            \"type\": \"fsa\"\n          }\n        ],\n        \"productUses\": [\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": null,\n            \"employerContribution\": null,\n            \"excludedPeopleIds\": null,\n            \"ineligiblePeopleIds\": null,\n            \"numDeductionsPlanyear\": 12,\n            \"numDeductionsRemaining\": 12,\n            \"premium\": 600,\n            \"productId\": \"DENQNAABUGYEBD8DCIZ1WOOEYZ1FGH0R\",\n            \"totalPremiums\": 7200,\n            \"type\": \"medical_plan\",\n            \"vsCurrent\": null\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": 0,\n            \"employerContribution\": 150.03999999999996,\n            \"excludedPeopleIds\": null,\n            \"ineligiblePeopleIds\": null,\n            \"numDeductionsPlanyear\": 26,\n            \"numDeductionsRemaining\": 26,\n            \"premium\": 0,\n            \"productId\": \"NUWCFEW8QSKPZJVEW3BPIYAPVPLZZHKZ\",\n            \"totalPremiums\": 0,\n            \"type\": \"fsa\",\n            \"vsCurrent\": null\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": null\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": null\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": null\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": null\n              }\n            ],\n            \"employeeContribution\": 0,\n            \"employerContribution\": 999.96,\n            \"excludedPeopleIds\": null,\n            \"ineligiblePeopleIds\": null,\n            \"numDeductionsPlanyear\": 26,\n            \"numDeductionsRemaining\": 26,\n            \"premium\": 0,\n            \"productId\": \"PP4VVN3DQMUWDJE2SINDZOHX73AUHDH7\",\n            \"totalPremiums\": 0,\n            \"type\": \"hra\",\n            \"vsCurrent\": null\n          },\n          {\n            \"coverageFrom\": \"subscriber\",\n            \"coveredPeople\": [\n              {\n                \"id\": \"DMDFFSBJUDDCSJHT1SVDC11I0E6ZWWEJ\",\n                \"level\": 30000\n              },\n              {\n                \"id\": \"T6RT9PB6XPEJN9TCZRJ2XNNUOU42P4D2\",\n                \"level\": 1000\n              },\n              {\n                \"id\": \"PD8PXYCIDKLSHTRYQ1F6HB1SPQ49SBFF\",\n                \"level\": 1000\n              },\n              {\n                \"id\": \"ECVE6OFDC7CFKZ4KDVN64G7GELY43O5K\",\n                \"level\": 15000\n              }\n            ],\n            \"employeeContribution\": null,\n            \"employerContribution\": null,\n            \"excludedPeopleIds\": null,\n            \"ineligiblePeopleIds\": null,\n            \"numDeductionsPlanyear\": null,\n            \"numDeductionsRemaining\": null,\n            \"premium\": 10.83,\n            \"productId\": \"5SJHB4ZW753QHIYDOSDMLEDRCNR2NLME\",\n            \"totalPremiums\": 129.96,\n            \"type\": \"illness_indemnity\",\n            \"vsCurrent\": null\n          }\n        ],\n        \"vignettes\": {\n          \"bundlePlanCosts\": {\n            \"baseBundle\": {\n              \"type\": \"non_hdhp\",\n              \"premiums\": 7581.48,\n              \"outOfPocket\": 0,\n              \"total\": 7581.48,\n              \"totalPerPaycheck\": 7581.4800000000005,\n              \"employeeContributions\": {\n                \"fsa\": 0,\n                \"hsa\": 0,\n                \"lpfsa\": 0\n              }\n            }\n          },\n          \"closestComparison\": null,\n          \"growthIllustration\": null,\n          \"healthAccountAdvantages\": null\n        }\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/recommendations",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "recommendations"
+              ]
+            },
+            "description": "Saves bundle recommendations to MongoDB"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bundle Selection",
+      "item": [
+        {
+          "name": "Get Bundle Selection",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.response.to.be.json;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19968\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19968\",\"platformInternalId\":\"12853765\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              },
+              {
+                "key": "platformInternalId",
+                "value": "007700057",
+                "description": "Fallback: Used only if token is not parsable",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/selection?businessProcessReferenceId=bp-ref-12345&evaluationid=eval-12345",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "selection"
+              ],
+              "query": [
+                {
+                  "key": "businessProcessReferenceId",
+                  "value": "bp-ref-12345",
+                  "description": "Business process reference ID (REQUIRED)"
+                },
+                {
+                  "key": "evaluationid",
+                  "value": "eval-12345",
+                  "description": "Evaluation ID (OPTIONAL)"
+                }
+              ]
+            },
+            "description": "Retrieves bundle selection. clientId extracted from alightRequestHeader JSON. platformInternalId extracted from alightPersonSessionToken JSON (from idMapping array) or falls back to platformInternalId header."
+          },
+          "response": []
+        },
+        {
+          "name": "Save Bundle Selection",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200: \"+ pm.response.code === 200);",
+                  "",
+                  "const responseJson = pm.response.json();",
+                  "pm.test(\"Response json not null: \"+responseJson !== null);",
+                  "",
+                  "pm.test(\"Response contains minimum fields \", () => {",
+                  "     pm.expect(responseJson.evaluationId).not.empty;",
+                  "     pm.expect(responseJson.businessProcessReferenceId).not.empty;",
+                  "     pm.expect(responseJson.platformInternalId).not.empty;",
+                  "}); "
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19968\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19968\",\"platformInternalId\":\"12853765\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "platformInternalId",
+                "value": "12853765",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\":\"19968\",\n  \"platformInternalId\":\"12853765\",\n  \"evaluationId\": \"EVAL-1772803017153\",\n  \"businessProcessReferenceId\": \"12345\",\n  \"featuredAs\": \"balanced\",\n  \"planYearBeginDate\": \"2026-01-01\"\n}"
+            },
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/selection",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "selection"
+              ]
+            },
+            "description": "Saves bundle selection. clientId extracted from alightRequestHeader JSON. platformInternalId extracted from alightPersonSessionToken JSON."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Evaluation Input",
+      "item": [
+        {
+          "name": "Get Evaluation Input Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.response.to.be.json;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19943\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19943\",\"platformInternalId\":\"120000001\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              },
+              {
+                "key": "platformInternalId",
+                "value": "007700057",
+                "description": "Fallback: Used only if token is not parsable",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/evaluationinput?businessProcessReferenceId=12345&evaluationid=EVAL-1773163629803",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "evaluationinput"
+              ],
+              "query": [
+                {
+                  "key": "businessProcessReferenceId",
+                  "value": "12345",
+                  "description": "Business process reference ID (REQUIRED)"
+                },
+                {
+                  "key": "evaluationid",
+                  "value": "EVAL-1773161880996",
+                  "description": "Evaluation ID (OPTIONAL)",
+                  "disabled": true
+                },
+                {
+                  "key": "evaluationid",
+                  "value": "EVAL-1773163629803"
+                }
+              ]
+            },
+            "description": "Retrieves evaluation input. clientId extracted from alightRequestHeader JSON. platformInternalId extracted from alightPersonSessionToken JSON (from idMapping array) or falls back to platformInternalId header."
+          },
+          "response": [
+            {
+              "name": "Get Evaluation Input",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "alightRequestHeader",
+                    "value": "{\"clientId\":\"19943\"}",
+                    "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                    "type": "text"
+                  },
+                  {
+                    "key": "alightPersonSessionToken",
+                    "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19943\",\"platformInternalId\":\"120000001\"}],\"locale\":\"en_US\"}",
+                    "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                    "type": "text"
+                  },
+                  {
+                    "key": "platformInternalId",
+                    "value": "007700057",
+                    "description": "Fallback: Used only if token is not parsable",
+                    "type": "text",
+                    "disabled": true
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:8080/api/bundle/evaluationinput?businessProcessReferenceId=12345",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "bundle",
+                    "evaluationinput"
+                  ],
+                  "query": [
+                    {
+                      "key": "businessProcessReferenceId",
+                      "value": "12345",
+                      "description": "Business process reference ID (REQUIRED)"
+                    },
+                    {
+                      "key": "evaluationid",
+                      "value": "EVAL-1773161880996",
+                      "description": "Evaluation ID (OPTIONAL)",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 10 Mar 2026 17:24:07 GMT"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"clientId\": \"19943\",\n    \"platformInternalId\": \"120000001\",\n    \"evaluationId\": \"EVAL-1773161880996\",\n    \"businessProcessReferenceId\": \"12345\",\n    \"timestamp\": \"2026-01-01-00.00.00\",\n    \"savedAt\": \"2026-03-10T17:19:46.163493562\",\n    \"createdAt\": \"2026-03-10T16:58:02.158562496\",\n    \"updatedAt\": \"2026-03-10T17:19:46.163493562\",\n    \"savviRequest\": {\n        \"subscriber\": {\n            \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\",\n            \"birthdate\": \"1979-02-15\",\n            \"healthcare\": {\n                \"expected_usage\": {\n                    \"medical_care\": {\n                        \"type\": \"level\",\n                        \"usage\": \"low\"\n                    }\n                }\n            },\n            \"annual_pay\": 80000,\n            \"tax_state\": \"MD\",\n            \"pay_periods_planyear\": 26,\n            \"pay_periods_remaining\": 26\n        },\n        \"products\": [\n            {\n                \"type\": \"medical_plan\",\n                \"product_id\": \"VNCLWESSXLN6PQBPGEZMNNMJKZVCPQQT\",\n                \"plan_ids\": [\n                    \"P6cSfI3dH3dOEdrO\"\n                ],\n                \"is_hdhp\": true,\n                \"in_network\": {\n                    \"coinsurance\": 20,\n                    \"deductibles\": {\n                        \"individual\": 1600,\n                        \"family\": 3200\n                    },\n                    \"hasPreventiveCare\": true,\n                    \"services\": {\n                        \"drugsGeneric\": {\n                            \"coinsurance\": 20,\n                            \"maxCoinsurance\": 10\n                        }\n                    },\n                    \"outofpocketLimits\": {\n                        \"individual\": 6000,\n                        \"family\": 12000\n                    }\n                }\n            },\n            {\n                \"type\": \"hsa\",\n                \"product_id\": \"ER27FUDAHATKOBD3MRU88BJZ49D0I2OQ\",\n                \"plan_ids\": [\n                    \"Ps2iS4L70Kp1ZSSa\"\n                ],\n                \"is_investable\": true\n            }\n        ],\n        \"customizations\": {\n            \"custom_bundle\": {\n                \"plans\": [\n                    {\n                        \"plan_id\": \"PoJoQD6ZLOxgxrA1\"\n                    },\n                    {\n                        \"plan_id\": \"Pme3lQX7CnKK1g1H\"\n                    },\n                    {\n                        \"plan_id\": \"PabJKFAMCAGjQE2G\"\n                    },\n                    {\n                        \"plan_id\": \"PUqXvCYJ5H8Fw0Km\",\n                        \"level\": 20000,\n                        \"level_spouse\": 10000,\n                        \"level_child\": 2000\n                    }\n                ]\n            }\n        },\n        \"sponsor_id\": \"19943\",\n        \"plan_year_start_date\": \"2025-01-01\",\n        \"plan_year_end_date\": \"2025-12-31\",\n        \"enrollment_mode\": \"annual\",\n        \"effective_date\": \"2025-01-01\",\n        \"coverable_people\": [\n            {\n                \"id\": \"R0JDJ4IUL8XLXCTUJFCYH7PNYT9FUVA6\",\n                \"birthdate\": \"2016-07-15\",\n                \"relationship\": \"child\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": \"HUJ85NFTDJGKR1LA9BXE8AZSMPJ7WPP1\",\n                \"birthdate\": \"1981-05-15\",\n                \"relationship\": \"spouse\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": \"GM0YSSPC8BVB6VFRAEUXKFDSC8WFSRIR\",\n                \"birthdate\": \"2012-11-15\",\n                \"relationship\": \"child\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            }\n        ],\n        \"accounts\": [\n            {\n                \"type\": \"hsa\",\n                \"owner\": \"subscriber\",\n                \"starting_balance\": 5000,\n                \"contribution_ytd\": 60000,\n                \"employer_contribution_ytd\": 20000\n            }\n        ],\n        \"eligible_offers\": [\n            {\n                \"offer_type\": \"coverage_choice\",\n                \"plan_id\": \"P6cSfI3dH3dOEdrO\",\n                \"offer_id\": \"KO8CE8BWT0FKK09OFXZJFPFEPSV9IZD4\",\n                \"num_deductions_planyear\": 26,\n                \"num_deductions_remaining\": 26,\n                \"coverage_start_date\": \"2025-01-01\",\n                \"coverage_end_date\": \"2025-12-31\",\n                \"is_section125\": true,\n                \"coverage_choices\": [\n                    {\n                        \"coverage_id\": \"Y094HSEL3X3AEF2JG0DGDG15WFNNT6WM\",\n                        \"premium\": 37.05,\n                        \"covered_people\": [\n                            {\n                                \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\"\n                            }\n                        ]\n                    }\n                ]\n            }\n        ],\n        \"current_enrollments\": [\n            {\n                \"plan_id\": \"3005\",\n                \"mapped_plan_id\": \"3005\",\n                \"premium\": 4245,\n                \"num_deductions_planyear\": 4,\n                \"num_deductions_remaining\": 2,\n                \"coverage_start_date\": \"2022-11-15\",\n                \"coverage_end_date\": \"2026-11-15\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Save Evaluation Input Copy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"timestampMs\", Date.now());"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200: \"+ pm.response.code === 200);",
+                  "",
+                  "const responseJson = pm.response.json();",
+                  "pm.test(\"Response json not null: \"+responseJson !== null);",
+                  "",
+                  "pm.test(\"Response contains minimum fields \", () => {",
+                  "     pm.expect(responseJson.evaluationId).not.empty;",
+                  "     pm.expect(responseJson.businessProcessReferenceId).not.empty;",
+                  "     pm.expect(responseJson.platformInternalId).not.empty;",
+                  "}); "
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "alightRequestHeader",
+                "value": "{\"clientId\":\"19943\"}",
+                "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                "type": "text"
+              },
+              {
+                "key": "alightPersonSessionToken",
+                "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19943\",\"platformInternalId\":\"120000001\"}],\"locale\":\"en_US\"}",
+                "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evaluationId\": \"EVAL-{{timestampMs}}\",\n  \"businessProcessReferenceId\": \"12345\",\n  \"savviRequest\": {\n    \"sponsor_id\":\"19943\",\n    \"plan_year_start_date\": \"2025-01-01\",\n    \"plan_year_end_date\": \"2025-12-31\",\n    \"enrollment_mode\": \"annual\",\n    \"effective_date\": \"2025-01-01\",\n    \"subscriber\": {\n      \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\",\n      \"birthdate\": \"1979-02-15\",\n      \"annual_pay\": 50000,\n      \"tax_state\": \"AL\",\n      \"pay_periods_planyear\": 26,\n      \"pay_periods_remaining\": 26,\n      \"healthcare\": {\n        \"expected_usage\": {\n          \"medical_care\": {\n            \"type\": \"level\",\n            \"usage\": \"low\"\n          }\n        }\n      }\n    },\n    \"coverable_people\": [\n      {\n        \"id\": \"R0JDJ4IUL8XLXCTUJFCYH7PNYT9FUVA6\",\n        \"birthdate\": \"2016-07-15\",\n        \"relationship\": \"child\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      },\n      {\n        \"id\": \"HUJ85NFTDJGKR1LA9BXE8AZSMPJ7WPP1\",\n        \"birthdate\": \"1981-05-15\",\n        \"relationship\": \"spouse\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      },\n      {\n        \"id\": \"GM0YSSPC8BVB6VFRAEUXKFDSC8WFSRIR\",\n        \"birthdate\": \"2012-11-15\",\n        \"relationship\": \"child\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      }\n    ],\n    \"accounts\": [{\n        \"type\":\"hsa\",\n        \"owner\":\"subscriber\",\n        \"starting_balance\":5000.00,\n        \"contribution_ytd\":60000.00,\n        \"employer_contribution_ytd\":20000.0\n\n    }],\n    \"current_enrollments\":[{\n        \"plan_id\":\"3005\",\n        \"mapped_plan_id\":\"3005\",\n        \"premium\":4245.00,\n        \"num_deductions_planyear\":4,\n        \"num_deductions_remaining\":2,\n        \"coverage_start_date\": \"2022-11-15\",\n        \"coverage_end_date\":\"2026-11-15\"\n\n    }],\n    \"products\": [\n      {\n        \"type\": \"medical_plan\",\n        \"product_id\": \"VNCLWESSXLN6PQBPGEZMNNMJKZVCPQQT\",\n        \"plan_ids\": [\"P6cSfI3dH3dOEdrO\"],\n        \"in_network\": {\n          \"coinsurance\": 20,\n          \"deductibles\": {\n            \"individual\": 1600,\n            \"family\": 3200\n          },\n          \"hasPreventiveCare\": true,\n          \"services\": {\n            \"drugsGeneric\": {\n              \"coinsurance\": 20,\n              \"maxCoinsurance\": 10\n            }\n          },\n          \"outofpocketLimits\": {\n            \"individual\": 6000,\n            \"family\": 12000\n          }\n        },\n        \"is_hdhp\": true\n      },\n      {\n        \"type\": \"hsa\",\n        \"product_id\": \"ER27FUDAHATKOBD3MRU88BJZ49D0I2OQ\",\n        \"plan_ids\": [\"Ps2iS4L70Kp1ZSSa\"],\n        \"is_investable\": true\n      }\n    ],\n    \"eligible_offers\": [\n      {\n        \"offer_type\": \"coverage_choice\",\n        \"plan_id\": \"P6cSfI3dH3dOEdrO\",\n        \"offer_id\": \"KO8CE8BWT0FKK09OFXZJFPFEPSV9IZD4\",\n        \"num_deductions_planyear\": 26,\n        \"num_deductions_remaining\": 26,\n        \"is_section125\": true,\n        \"coverage_start_date\": \"2025-01-01\",\n        \"coverage_end_date\": \"2025-12-31\",\n        \"coverage_choices\": [\n          {\n            \"coverage_id\": \"Y094HSEL3X3AEF2JG0DGDG15WFNNT6WM\",\n            \"premium\": 37.05,\n            \"covered_people\": [\n              {\n                \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\"\n              }\n            ]\n          }\n        ]\n      }\n    ],\n    \"customizations\": {\n      \"custom_bundle\": {\n        \"plans\": [\n          {\n            \"plan_id\": \"PoJoQD6ZLOxgxrA1\"\n          },\n          {\n            \"plan_id\": \"Pme3lQX7CnKK1g1H\"\n          },\n          {\n            \"plan_id\": \"PabJKFAMCAGjQE2G\"\n          },\n          {\n            \"plan_id\": \"PUqXvCYJ5H8Fw0Km\",\n            \"level\": 20000,\n            \"level_spouse\": 10000,\n            \"level_child\": 2000\n          }\n        ]\n      }\n    }\n  },\n  \"timestamp\": \"2026-01-01-00.00.00\"\n}"
+            },
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/api/bundle/evaluationinput",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "api",
+                "bundle",
+                "evaluationinput"
+              ]
+            },
+            "description": "Saves evaluation input data to MongoDB. platformInternalId extracted from alightPersonSessionToken JSON (if parsable) or from header fallback. clientId extracted from alightRequestHeader JSON."
+          },
+          "response": [
+            {
+              "name": "Save Evaluation Input",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "alightRequestHeader",
+                    "value": "{\"clientId\":\"19943\"}",
+                    "description": "JSON with clientId (REQUIRED). Service extracts clientId from this JSON.",
+                    "type": "text"
+                  },
+                  {
+                    "key": "alightPersonSessionToken",
+                    "value": "{\"brokerUserId\":\"Portal\",\"idMapping\":[{\"platformType\":\"TBA\",\"clientId\":\"19943\",\"platformInternalId\":\"120000001\"}],\"locale\":\"en_US\"}",
+                    "description": "JSON PersonSessionToken. Service extracts platformInternalId from idMapping array. Can be raw JSON or Base64-encoded.",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"evaluationId\": \"EVAL-{{timestampMs}}\",\n  \"businessProcessReferenceId\": \"12345\",\n  \"savviRequest\": {\n    \"sponsor_id\":\"19943\",\n    \"plan_year_start_date\": \"2025-01-01\",\n    \"plan_year_end_date\": \"2025-12-31\",\n    \"enrollment_mode\": \"annual\",\n    \"effective_date\": \"2025-01-01\",\n    \"subscriber\": {\n      \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\",\n      \"birthdate\": \"1979-02-15\",\n      \"annual_pay\": 50000,\n      \"tax_state\": \"AL\",\n      \"pay_periods_planyear\": 26,\n      \"pay_periods_remaining\": 26,\n      \"healthcare\": {\n        \"expected_usage\": {\n          \"medical_care\": {\n            \"type\": \"level\",\n            \"usage\": \"low\"\n          }\n        }\n      }\n    },\n    \"coverable_people\": [\n      {\n        \"id\": \"R0JDJ4IUL8XLXCTUJFCYH7PNYT9FUVA6\",\n        \"birthdate\": \"2016-07-15\",\n        \"relationship\": \"child\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      },\n      {\n        \"id\": \"HUJ85NFTDJGKR1LA9BXE8AZSMPJ7WPP1\",\n        \"birthdate\": \"1981-05-15\",\n        \"relationship\": \"spouse\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      },\n      {\n        \"id\": \"GM0YSSPC8BVB6VFRAEUXKFDSC8WFSRIR\",\n        \"birthdate\": \"2012-11-15\",\n        \"relationship\": \"child\",\n        \"healthcare\": {\n          \"expected_usage\": {\n            \"medical_care\": {\n              \"type\": \"level\",\n              \"usage\": \"low\"\n            }\n          }\n        }\n      }\n    ],\n    \"accounts\": [{\n        \"type\":\"hsa\",\n        \"owner\":\"subscriber\",\n        \"starting_balance\":5000.00,\n        \"contribution_ytd\":60000.00,\n        \"employer_contribution_ytd\":20000.0\n\n    }],\n    \"current_enrollments\":[{\n        \"plan_id\":\"3005\",\n        \"mapped_plan_id\":\"3005\",\n        \"premium\":4245.00,\n        \"num_deductions_planyear\":4,\n        \"num_deductions_remaining\":2,\n        \"coverage_start_date\": \"2022-11-15\",\n        \"coverage_end_date\":\"2026-11-15\"\n\n    }],\n    \"products\": [\n      {\n        \"type\": \"medical_plan\",\n        \"product_id\": \"VNCLWESSXLN6PQBPGEZMNNMJKZVCPQQT\",\n        \"plan_ids\": [\"P6cSfI3dH3dOEdrO\"],\n        \"in_network\": {\n          \"coinsurance\": 20,\n          \"deductibles\": {\n            \"individual\": 1600,\n            \"family\": 3200\n          },\n          \"hasPreventiveCare\": true,\n          \"services\": {\n            \"drugsGeneric\": {\n              \"coinsurance\": 20,\n              \"maxCoinsurance\": 10\n            }\n          },\n          \"outofpocketLimits\": {\n            \"individual\": 6000,\n            \"family\": 12000\n          }\n        },\n        \"is_hdhp\": true\n      },\n      {\n        \"type\": \"hsa\",\n        \"product_id\": \"ER27FUDAHATKOBD3MRU88BJZ49D0I2OQ\",\n        \"plan_ids\": [\"Ps2iS4L70Kp1ZSSa\"],\n        \"is_investable\": true\n      }\n    ],\n    \"eligible_offers\": [\n      {\n        \"offer_type\": \"coverage_choice\",\n        \"plan_id\": \"P6cSfI3dH3dOEdrO\",\n        \"offer_id\": \"KO8CE8BWT0FKK09OFXZJFPFEPSV9IZD4\",\n        \"num_deductions_planyear\": 26,\n        \"num_deductions_remaining\": 26,\n        \"is_section125\": true,\n        \"coverage_start_date\": \"2025-01-01\",\n        \"coverage_end_date\": \"2025-12-31\",\n        \"coverage_choices\": [\n          {\n            \"coverage_id\": \"Y094HSEL3X3AEF2JG0DGDG15WFNNT6WM\",\n            \"premium\": 37.05,\n            \"covered_people\": [\n              {\n                \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\"\n              }\n            ]\n          }\n        ]\n      }\n    ],\n    \"customizations\": {\n      \"custom_bundle\": {\n        \"plans\": [\n          {\n            \"plan_id\": \"PoJoQD6ZLOxgxrA1\"\n          },\n          {\n            \"plan_id\": \"Pme3lQX7CnKK1g1H\"\n          },\n          {\n            \"plan_id\": \"PabJKFAMCAGjQE2G\"\n          },\n          {\n            \"plan_id\": \"PUqXvCYJ5H8Fw0Km\",\n            \"level\": 20000,\n            \"level_spouse\": 10000,\n            \"level_child\": 2000\n          }\n        ]\n      }\n    }\n  },\n  \"timestamp\": \"2026-01-01-00.00.00\"\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/api/bundle/evaluationinput",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "api",
+                    "bundle",
+                    "evaluationinput"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 07:54:50 GMT"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"clientId\": \"19943\",\n    \"platformInternalId\": \"120000001\",\n    \"evaluationId\": \"EVAL-1773215690171\",\n    \"businessProcessReferenceId\": \"12345\",\n    \"timestamp\": \"2026-01-01-00.00.00\",\n    \"savedAt\": \"2026-03-11T07:54:50.328088462\",\n    \"createdAt\": \"2026-03-11T07:54:50.328088462\",\n    \"updatedAt\": \"2026-03-11T07:54:50.328088462\",\n    \"savviRequest\": {\n        \"subscriber\": {\n            \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\",\n            \"birthdate\": \"1979-02-15\",\n            \"healthcare\": {\n                \"expected_usage\": {\n                    \"medical_care\": {\n                        \"type\": \"level\",\n                        \"usage\": \"low\"\n                    }\n                }\n            },\n            \"annual_pay\": 50000,\n            \"tax_state\": \"AL\",\n            \"pay_periods_planyear\": 26,\n            \"pay_periods_remaining\": 26\n        },\n        \"products\": [\n            {\n                \"type\": \"medical_plan\",\n                \"product_id\": \"VNCLWESSXLN6PQBPGEZMNNMJKZVCPQQT\",\n                \"plan_ids\": [\n                    \"P6cSfI3dH3dOEdrO\"\n                ],\n                \"is_hdhp\": true,\n                \"in_network\": {\n                    \"coinsurance\": 20,\n                    \"deductibles\": {\n                        \"individual\": 1600,\n                        \"family\": 3200\n                    },\n                    \"hasPreventiveCare\": true,\n                    \"services\": {\n                        \"drugsGeneric\": {\n                            \"coinsurance\": 20,\n                            \"maxCoinsurance\": 10\n                        }\n                    },\n                    \"outofpocketLimits\": {\n                        \"individual\": 6000,\n                        \"family\": 12000\n                    }\n                }\n            },\n            {\n                \"type\": \"hsa\",\n                \"product_id\": \"ER27FUDAHATKOBD3MRU88BJZ49D0I2OQ\",\n                \"plan_ids\": [\n                    \"Ps2iS4L70Kp1ZSSa\"\n                ],\n                \"is_investable\": true\n            }\n        ],\n        \"customizations\": {\n            \"custom_bundle\": {\n                \"plans\": [\n                    {\n                        \"plan_id\": \"PoJoQD6ZLOxgxrA1\"\n                    },\n                    {\n                        \"plan_id\": \"Pme3lQX7CnKK1g1H\"\n                    },\n                    {\n                        \"plan_id\": \"PabJKFAMCAGjQE2G\"\n                    },\n                    {\n                        \"plan_id\": \"PUqXvCYJ5H8Fw0Km\",\n                        \"level\": 20000,\n                        \"level_spouse\": 10000,\n                        \"level_child\": 2000\n                    }\n                ]\n            }\n        },\n        \"sponsor_id\": \"19943\",\n        \"plan_year_start_date\": \"2025-01-01\",\n        \"plan_year_end_date\": \"2025-12-31\",\n        \"enrollment_mode\": \"annual\",\n        \"effective_date\": \"2025-01-01\",\n        \"coverable_people\": [\n            {\n                \"id\": \"R0JDJ4IUL8XLXCTUJFCYH7PNYT9FUVA6\",\n                \"birthdate\": \"2016-07-15\",\n                \"relationship\": \"child\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": \"HUJ85NFTDJGKR1LA9BXE8AZSMPJ7WPP1\",\n                \"birthdate\": \"1981-05-15\",\n                \"relationship\": \"spouse\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": \"GM0YSSPC8BVB6VFRAEUXKFDSC8WFSRIR\",\n                \"birthdate\": \"2012-11-15\",\n                \"relationship\": \"child\",\n                \"healthcare\": {\n                    \"expected_usage\": {\n                        \"medical_care\": {\n                            \"type\": \"level\",\n                            \"usage\": \"low\"\n                        }\n                    }\n                }\n            }\n        ],\n        \"accounts\": [\n            {\n                \"type\": \"hsa\",\n                \"owner\": \"subscriber\",\n                \"starting_balance\": 5000,\n                \"contribution_ytd\": 60000,\n                \"employer_contribution_ytd\": 20000\n            }\n        ],\n        \"eligible_offers\": [\n            {\n                \"offer_type\": \"coverage_choice\",\n                \"plan_id\": \"P6cSfI3dH3dOEdrO\",\n                \"offer_id\": \"KO8CE8BWT0FKK09OFXZJFPFEPSV9IZD4\",\n                \"num_deductions_planyear\": 26,\n                \"num_deductions_remaining\": 26,\n                \"coverage_start_date\": \"2025-01-01\",\n                \"coverage_end_date\": \"2025-12-31\",\n                \"is_section125\": true,\n                \"coverage_choices\": [\n                    {\n                        \"coverage_id\": \"Y094HSEL3X3AEF2JG0DGDG15WFNNT6WM\",\n                        \"premium\": 37.05,\n                        \"covered_people\": [\n                            {\n                                \"id\": \"VBAYSGJWFI9GP5CHAGIYGGUMHNZN2QOA\"\n                            }\n                        ]\n                    }\n                ]\n            }\n        ],\n        \"current_enrollments\": [\n            {\n                \"plan_id\": \"3005\",\n                \"mapped_plan_id\": \"3005\",\n                \"premium\": 4245,\n                \"num_deductions_planyear\": 4,\n                \"num_deductions_remaining\": 2,\n                \"coverage_start_date\": \"2022-11-15\",\n                \"coverage_end_date\": \"2026-11-15\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Actuator Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/actuator/health",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            },
+            "description": "Spring Boot Actuator health check endpoint"
+          },
+          "response": []
+        },
+        {
+          "name": "Actuator Health Readiness",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dp-com-health-bundle.awlpd.aws.alight.com/actuator/health/readiness",
+              "protocol": "https",
+              "host": [
+                "dp-com-health-bundle",
+                "awlpd",
+                "aws",
+                "alight",
+                "com"
+              ],
+              "path": [
+                "actuator",
+                "health",
+                "readiness"
+              ]
+            },
+            "description": "Spring Boot Actuator readiness probe - used by AWS ALB Target Group health checks"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
